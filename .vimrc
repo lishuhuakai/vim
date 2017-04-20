@@ -1,6 +1,26 @@
-set nocompatible              " be iMproved, required
-filetype off                  " required
+set incsearch "在你键入搜索的字符串的同时就开始搜索当前已经键入的部分
+set nocompatible " 不兼容vi
+set magic " 正则表达式的元字符不用加转义
+"使得退格键可用
+set backspace=indent,eol,start
+set autoindent " 使得vim开始一个新行的时候对该行施以上一行的缩进方式
+set nu " 设置显示行号
+" colorscheme evening
+set autowrite " 每当需要时,自动备份
+set ruler " 总是在Vim的右下角显示当前光标的行列信息
+set showcmd " 在vim窗口的右下角显示一个完整的命令已经完成的部分
 
+" 下面的代码用于设置字符编码
+set enc=utf-8
+set fencs=utf-8,gbk,big5,cp936,gb18030,gb2312,utf-16
+set fenc=utf-8
+
+filetype plugin indent on " 自动识别文件,用文件类型的plugin脚本,使用缩进定义文件
+autocmd Filetype text setlocal textwidth=78 " Vim 自动断行,触发点是当前行已经超过了78个字符
+set whichwrap=b,s,<,>,[,] " 光标位于行首时按退格键会往回移动到上一行的行尾,同时在行尾按空格键也会移动到下一行的行首,左右箭头也支持相同的操作.
+
+
+filetype off
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
@@ -9,55 +29,35 @@ call vundle#begin()
 
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
-Plugin 'bling/vim-airline'
-Plugin 'scrooloose/syntastic'
-Plugin 'scrooloose/nerdtree'
-Plugin 'Shougo/neocomplete.vim'
-Plugin 'scrooloose/nerdcommenter'
-" The following are examples of different formats supported.
-" Keep Plugin commands between vundle#begin/end.
-" plugin on GitHub repo
+" 以下范例用来支持不同格式的插件安装.
+" 请将安装插件的命令放在vundle#begin和vundle#end之间.
+" Github上的插件
+" 格式为 Plugin '用户名/插件仓库名'
 Plugin 'tpope/vim-fugitive'
-" plugin from http://vim-scripts.org/vim/scripts.html
+Plugin 'scrooloose/nerdcommenter'
+Plugin 'coot/CRDispatcher'
+Plugin 'coot/EnchantedVim'
+Plugin 'iamcco/markdown-preview.vim'
+Plugin 'bling/vim-airline'
+" 来自 http://vim-scripts.org/vim/scripts.html 的插件
+" Plugin '插件名称' 实际上是 Plugin 'vim-scripts/插件仓库名'
+" 只是此处的用户名可以省略
 Plugin 'L9'
-" Git plugin not hosted on GitHub
-Plugin 'git://git.wincent.com/command-t.git'
-" git repos on your local machine (i.e. when working on your own plugin)
-Plugin 'file:///home/gmarik/path/to/plugin'
-" The sparkup vim script is in a subdirectory of this repo called vim.
-" Pass the path to set the runtimepath properly.
-Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
 
-" Avoid a name confilct with L9
-Plugin 'user/L9', {'name': 'newL9'}
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
-" To ignore plugin indent changes, instead use:
-"filetype plugin on
-"
-" Brief help
-" :PluginList       - lists configured plugins
-" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
-" :PluginSearch foo - searches for foo; append `!` to refresh local cache
-" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
-"
-" see :h vundle for more details or wiki for FAQ
-" Put your non-Plugin stuff after this line
 
-set ruler
-set history=50
-set autoindent
-set showcmd
-set incsearch
-set nowrapscan
-set nu
-set bs=indent,eol,start
+""""""""""""""""""""""""""""
+"  Vim 插件设定 
+""""""""""""""""""""""""""""
 imap jj <Esc>
 filetype indent on
 filetype plugin on
 
+""""""""""""""""""""""""""""
 " airline设置
+""""""""""""""""""""""""""""
 set laststatus=2
 " 使用powerline打过补丁的字体
 let g:airline_powerline_fonts = 1
@@ -72,99 +72,13 @@ let g:airline#extensions#tabline#buffer_nr_show = 1
 " 映射切换buffer的键位
 nnoremap [b :bp<CR>
 nnoremap ]b :bn<CR>
-
+" airline五颜六色的底栏全靠这个设置
 set t_Co=256
 
-"下面的代码用来配置nerdTree
-" nerdtree设置
-" 控制当光标移动超过一定距离时，是否自动将焦点调整到屏中心
-let NERDTreeAutoCenter=1
-" 指定鼠标模式（1.双击打开；2.单目录双文件；3.单击打开）
-" let NERDTreeMouseMode=2
-" 是否默认显示书签列表
-let NERDTreeShowBookmarks=1
-" 是否默认显示文件
-let NERDTreeShowFiles=1
-" 是否默认显示隐藏文件
-" let NERDTreeShowHidden=1
-" 是否默认显示行号
-let NERDTreeShowLineNumbers=1
-" 窗口位置（'left' or 'right'）
-let NERDTreeWinPos='left'
-" 窗口宽
-let NERDTreeWinSize=31
-
-"下面开始配置自动补全插件
-"Note: This option must set it in .vimrc(_vimrc).  NOT IN .gvimrc(_gvimrc)!
-" Disable AutoComplPop.
-let g:acp_enableAtStartup = 0
-" Use neocomplete.
-let g:neocomplete#enable_at_startup = 1
-" Use smartcase.
-let g:neocomplete#enable_smart_case = 1
-" Set minimum syntax keyword length.
-let g:neocomplete#sources#syntax#min_keyword_length = 3
-let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
-
-" Define dictionary.
-let g:neocomplete#sources#dictionary#dictionaries = {
-    \ 'default' : '',
-    \ 'vimshell' : $HOME.'/.vimshell_hist',
-    \ 'scheme' : $HOME.'/.gosh_completions'
-        \ }
-
-" Define keyword.
-if !exists('g:neocomplete#keyword_patterns')
-    let g:neocomplete#keyword_patterns = {}
-endif
-let g:neocomplete#keyword_patterns['default'] = '\h\w*'
-
-" Plugin key-mappings.
-inoremap <expr><C-g>     neocomplete#undo_completion()
-inoremap <expr><C-l>     neocomplete#complete_common_string()
-
-" Recommended key-mappings.
-" <CR>: close popup and save indent.
-inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-function! s:my_cr_function()
-  return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
-  " For no inserting <CR> key.
-  "return pumvisible() ? "\<C-y>" : "\<CR>"
-endfunction
-" <TAB>: completion.
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-" <C-h>, <BS>: close popup and delete backword char.
-inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
-inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
-" Close popup by <Space>.
-"inoremap <expr><Space> pumvisible() ? "\<C-y>" : "\<Space>"
-
-" AutoComplPop like behavior.
-"let g:neocomplete#enable_auto_select = 1
-
-" Shell like behavior(not recommended).
-"set completeopt+=longest
-"let g:neocomplete#enable_auto_select = 1
-"let g:neocomplete#disable_auto_complete = 1
-"inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<C-x>\<C-u>"
-
-" Enable omni completion.
-autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-
-" Enable heavy omni completion.
-if !exists('g:neocomplete#sources#omni#input_patterns')
-  let g:neocomplete#sources#omni#input_patterns = {}
-endif
-"let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
-"let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
-"let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
-
-" For perlomni.vim setting.
-" https://github.com/c9s/perlomni.vim
-let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
-
-Bundle 'The-NERD-Commenter'
+""""""""""""""""""""""""""""
+" nerd commenter设定
+""""""""""""""""""""""""""""
+" 注释的时候自动加一个空格
+let g:NERDSpaceDelims=1
+" 让\绑定到,
+let mapleader=","
