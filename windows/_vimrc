@@ -1,0 +1,167 @@
+set incsearch "在你键入搜索的字串的同时就开始搜索当前已经键入的部分.
+set nocompatible "不兼容vi
+set magic "正则表达式的元字符不用加转义
+set encoding=utf-8
+" 使得退格删除键可用
+set backspace=indent,eol,start
+
+set autoindent "使得vim开始一个新行的时候对该行施以上一行的缩进方式
+set nu " 设置显示行号
+colorscheme evening
+set autowrite "每当需要时,自动备份.
+
+"set background=dark "使用灰色背景
+"Vim在覆盖一个文件之前备份该文件,但是对VMS系统除外.
+"因为该系统已经为文件保存了老的版本.
+if has("vms")
+	set nobackup
+else
+	set backup
+endif
+
+set history=50 "设置冒号命令和搜索命令历史列表的长度.
+set ruler "总是在Vim窗口的右下角显示当前光标的行列信息.
+set showcmd "在Vim窗口的右下角显示一个完整的命令已经完成的部分.
+
+"将jj映射到Esc上.
+imap jj <Esc> 
+"下一个tab
+imap :tn :tabnext 
+"上一个tab
+imap :tp :tabprevious 
+"新建tab
+imap :tnw :tabnew 
+"映射搜索模式为very magic
+"map / /\v
+" 打开语法高亮功能,前提是当前系统支持彩色显示.
+if &t_Co > 2 || has("gui_running")
+	syntax on
+	set hlsearch
+endif
+
+filetype plugin indent on " 自动识别文件,用文件类型的plugin脚本,使用缩进定义文件
+autocmd Filetype text setlocal textwidth=78 " vim自动断行,触发点是当前行已超过78个字符
+
+set whichwrap=b,s,<,>,[,] " 光标位于行首时按退格键会往回移动到上一行的行尾,同时在行尾按空格键也会移动到下一行的行首,左右箭头也支持相同的操作.
+
+" 使用Bundle管理插件
+
+"filetype off                   " required!
+
+" set rtp+=~/.vim/bundle/vundle/  " for linux
+" call vundle#rc()  "linux
+set rtp+=$VIM/vimfiles/bundle/vundle/  " for windows
+"call vundle#rc('$VIM/vimfiles/bundle/') " for windows
+" let Vundle manage Vundle
+" required! 
+"Bundle 'gmarik/vundle'
+"filetype plugin indent on
+
+" 以后你想安装什么插件可以写在下面
+" 如果你的插件来自github，写在下方，只要作者名/项目名就行了
+"Bundle 'scrooloose/nerdcommenter'
+" 如果插件来自 vim-scripts，你直接写插件名就行了
+" Bundle 'L9'
+" Bundle 'FuzzyFinder'
+" 如使用自己的git库的插件，像下面这样做
+" Bundle 'git://git.wincent.com/command-t.git'
+" git repos on your local machine (ie. when working on your own plugin)
+" Bundle 'file:///Users/gmarik/path/to/plugin'
+" ...
+
+"filetype plugin indent on     " required!
+" 下面是 vundle的一些命令代会会用到
+"
+" Brief help
+" :BundleList          - list configured bundles
+" :BundleInstall(!)    - install(update) bundles
+" :BundleSearch(!) foo - search(or refresh cache first) for foo
+" :BundleClean(!)      - confirm(or auto-approve) removal of unused bundles
+"
+" see :h vundle for more details or wiki for FAQ
+" NOTE: comments after Bundle command are not allowed..
+" 这里可以写一些你自己的配置
+
+filetype off                  " 必须
+
+" 设置包括vundle和初始化相关的runtime path
+"set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+" 另一种选择, 指定一个vundle安装插件的路径
+call vundle#begin('$VIM/vimfiles/bundle/') " for windows
+
+" 让vundle管理插件版本,必须
+Plugin 'VundleVim/Vundle.vim'
+" 以下范例用来支持不同格式的插件安装.
+" 请将安装插件的命令放在vundle#begin和vundle#end之间.
+" Github上的插件
+" 格式为 Plugin '用户名/插件仓库名'
+"Plugin 'tpope/vim-fugitive'
+Plugin 'scrooloose/nerdcommenter'
+Plugin 'coot/CRDispatcher'
+Plugin 'coot/EnchantedVim'
+" 来自 http://vim-scripts.org/vim/scripts.html 的插件
+" Plugin '插件名称' 实际上是 Plugin 'vim-scripts/插件仓库名' 只是此处的用户名可以省略
+Plugin 'L9'
+" dot绘图的插件
+Plugin 'iamcco/markdown-preview.vim'
+Plugin 'wannesm/wmgraphviz.vim'
+Plugin 'hotoo/pangu.vim'
+" 由Git支持但不再github上的插件仓库 Plugin 'git clone 后面的地址'
+"Plugin 'git://git.wincent.com/command-t.git'
+" 本地的Git仓库(例如自己的插件) Plugin 'file:///+本地插件仓库绝对路径'
+"Plugin 'file:///home/gmarik/path/to/plugin'
+" 插件在仓库的子目录中.
+" 正确指定路径用以设置runtimepath. 以下范例插件在sparkup/vim目录下
+"Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
+" 安装L9，如果已经安装过这个插件，可利用以下格式避免命名冲突
+"Plugin 'ascenator/L9', {'name': 'newL9'}
+
+" 你的所有插件需要在下面这行之前
+call vundle#end()            " 必须
+filetype plugin indent on    " 必须 加载vim自带和插件相应的语法和文件类型相关脚本
+" 忽视插件改变缩进,可以使用以下替代:
+"filetype plugin on
+"
+" 简要帮助文档
+" :PluginList       - 列出所有已配置的插件
+" :PluginInstall    - 安装插件,追加 `!` 用以更新或使用 :PluginUpdate
+" :PluginSearch foo - 搜索 foo ; 追加 `!` 清除本地缓存
+" :PluginClean      - 清除未使用插件,需要确认; 追加 `!` 自动批准移除未使用插件
+"
+" 查阅 :h vundle 获取更多细节和wiki以及FAQ
+" 将你自己对非插件片段放在这行之后
+
+" nerd commenter config
+" 注释的时候自动加一个空格
+let g:NERDSpaceDelims=1
+" 让\绑定到,
+let mapleader=","
+
+let g:WMGraphviz_dot = 1
+
+
+" 将<leader>键映射为;
+let mapleader = ";"
+map <f8> :w<CR>:!dot -Tpng -o %<.png % && start %<.png<CR>
+" 普通模式
+nmap <slient> <F5> <Plug>MarkdownPreview 
+nmap <slient> <F6> <Plug>StopMarkdownPreview 
+let g:mkdp_path_to_chrome = "google-chrome"
+" 设置字体,以及字体大小
+set guifont=Monaco:h11
+"Toggle Menu and Toolbar
+set guioptions-=m
+set guioptions-=T
+
+" 关于Enchanted Vim的设定, 基本上能够使用very magic的地方,我全部替换成了very magic
+let g:VeryMagic = 1
+let g:VeryMagicSubstitute = 1  " (default is 0)
+let g:VeryMagicGlobal = 1  " (default is 0)
+let g:VeryMagicVimGrep = 1  " (default is 0)
+let g:VeryMagicSearchArg = 1  " (default is 0, :edit +/{pattern}))
+let g:VeryMagicFunction = 1  " (default is 0, :fun /{pattern})
+let g:VeryMagicHelpgrep = 1  " (default is 0)
+let g:VeryMagicRange = 1  " (default is 0, search patterns in command ranges)
+let g:VeryMagicEscapeBackslashesInSearchArg = 1  " (default is 0, :edit +/{pattern}))
+let g:SortEditArgs = 1  " (default is 0, see below)
